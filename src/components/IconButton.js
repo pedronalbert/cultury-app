@@ -26,7 +26,7 @@ class IconButton extends Component {
 
   _handlePress () {
     if (this.props.onPress) {
-      this.props.onPress();
+      return this.props.onPress();
     }
   }
 }

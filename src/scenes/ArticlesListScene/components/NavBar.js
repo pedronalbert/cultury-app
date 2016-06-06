@@ -13,10 +13,19 @@ import IconButton from '../../../components/IconButton';
 
 class NavBar extends Component {
   render () {
+    let handlePressMenuButton = this._handlePressMenuButton.bind(this);
+
     return <View style={styles.root}>
-      <IconButton style={styles.menuButton}/>
+      <IconButton style={styles.menuButton} onPress={handlePressMenuButton} />
+      
       <Text style={styles.title}>Artículos</Text>
     </View>
+  }
+
+  _handlePressMenuButton () {
+    if (this.props.onPressMenuButton) {
+      return this.props.onPressMenuButton();
+    }
   }
 }
 
