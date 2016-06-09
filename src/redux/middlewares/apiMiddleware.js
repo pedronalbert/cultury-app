@@ -17,16 +17,17 @@ let middleware = store => next => action => {
       type: actionData.type + '_REQUEST'
     });
 
-    client.get(actionData.url)
+    client.get(actionData.url, {params: actionData.params})
       .then(response => {
-        let responseData = response.data.data;
+        let responseData = response.data;
 
-        responseData = normalize(responseData, actionData.schema);
-
-        store.dispatch({
+        let newAction = {
           type: actionData.type + '_SUCCESS',
-          payload: responseData
-        });
+          payload: normalize(responseData.data, actionData.schema),
+          meta: responseData.meta
+        }
+
+        return store.dispatch(newAction);
       })
   } else {
     next(action);

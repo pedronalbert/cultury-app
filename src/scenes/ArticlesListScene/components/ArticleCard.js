@@ -12,21 +12,23 @@ import {
 import _ from 'lodash';
 
 /* Components */
-import {createStyles} from '../../../utils/mq.js';
-
 
 class ArticleCard extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      imageHeight: 100
+    }
+  }
+
   render () {
     let {article} = this.props;
     let {title, imageUrl, content} = article.attributes;
-    let handleOnLayout = this._handleOnLayout.bind(this);
+    let handleLayout = this._handleLayout.bind(this);
 
-    return <View 
-      style={styles.root}
-      onLayout={handleOnLayout}
-    >
-      <View style={styles.header}>
-        <Image source={{uri: imageUrl}} style={styles.image}/>
+    return <View style={styles.root}>
+      <View ref='header' style={styles.header} onLayout={handleLayout}>
+        <Image source={{uri: imageUrl}} style={{height: this.state.imageHeight}}/>
 
         <View style={styles.titleRow}>
           <Text style={styles.title} numberOfLines={1}>{_.capitalize(title)}</Text>
@@ -41,11 +43,18 @@ class ArticleCard extends Component {
     </View>
   }
 
-  _handleOnLayout() {
+  _handleLayout (event) {
+    this.refs.header.measure((a, b, width, height, px, py) => {
+      if (width) {
+        this.setState({
+          imageHeight: width * 0.40
+        });
+      }
+    });
   }
 }
 
-const baseStyles = {
+const styles = StyleSheet.create({
   root: {
     backgroundColor: 'white',
     margin: 8,
@@ -55,10 +64,6 @@ const baseStyles = {
     fontSize: 16,
     fontWeight: 'bold',
     color: 'white'
-  },
-
-  image: {
-    height: 130
   },
 
   titleRow: {
@@ -73,16 +78,8 @@ const baseStyles = {
   content: {
     backgroundColor: 'white',
     padding: 14
-  },
-
-  '@media (max-width:600)': {
-    title: {
-      color: 'red'
-    }
   }
-};
-
-const styles = createStyles(baseStyles);
+});
 
 
 ArticleCard.propTypes = {
