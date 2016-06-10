@@ -29,6 +29,17 @@ let middleware = store => next => action => {
 
         return store.dispatch(newAction);
       })
+      .catch(err => {
+        let newAction = {
+          type: actionData.type + '_FAIL',
+          error: true,
+          payload: {
+            message: 'Error al conectar con el servidor'
+          }
+        };
+
+        return store.dispatch(newAction);
+      })
   } else {
     next(action);
   }

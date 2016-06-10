@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
 IconButton.defaultProps = {
   iconName: 'menu',
   iconColor: 'white',
-  underlayColor: 'rgba(255,255,255,0.5)'
+  underlayColor: 'rgba(255,255,255,0.25)'
 };
 
 export default IconButton;

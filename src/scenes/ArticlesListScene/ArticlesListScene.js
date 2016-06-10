@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 /* Components */
 import NavBar from './components/NavBar';
 import ArticlesList from './components/ArticlesList';
-import { loadArticles } from '../../redux/actions/ArticlesActions';
+import { loadArticles, resetArticlesError } from '../../redux/actions/ArticlesActions';
 
 class ArticlesListScene extends Component {
   componentWillMount() {
@@ -21,21 +21,16 @@ class ArticlesListScene extends Component {
   }
   
   render () {
-    let handlePressMenuButton = this._handlePressMenuButton.bind(this);
-    let {articles, fetching} = this.props;
+    let {articles, fetching, errorMessage} = this.props;
+    let handlePressRetryButton = this._handlePressRetryButton.bind(this);
 
     return <View style={styles.root}>
-      <NavBar onPressMenuButton={handlePressMenuButton} />
+      <NavBar/>
       <ArticlesList 
-        articles={articles} 
-        fetching={fetching} 
+        articles={articles}
         onLoadMore={this._loadMoreArticles.bind(this)}
       />
     </View>
-  }
-
-  _handlePressMenuButton() {
-
   }
 
   _loadMoreArticles () {
@@ -44,6 +39,11 @@ class ArticlesListScene extends Component {
     if (page_count > page_number) {
       this.props.dispatch(loadArticles(page_number+1))
     }
+  }
+
+  _handlePressRetryButton () {
+    this.props.dispatch(resetArticlesError());
+    this._loadMoreArticles();
   }
 }
 
@@ -69,7 +69,8 @@ const mapStateToProps = (state) => {
   return {
     articles: articles,
     articles_meta: state.articles.get('meta').toJS(),
-    fetching: state.articles.get('fetching')
+    fetching: state.articles.get('fetching'),
+    errorMessage: state.articles.get('errorMessage')
   };
 };
 

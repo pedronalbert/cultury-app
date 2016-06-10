@@ -6,11 +6,15 @@ import React, {
 import {
   View,
   StyleSheet,
-  ScrollView
+  ScrollView,
+  Text
 } from 'react-native';
 import {
-  MKSpinner
+  MKSpinner,
+  MKButton,
+  MKColor
 } from 'react-native-material-kit';
+import _ from 'lodash';
 
 
 class ScrollViewP extends Component {
@@ -34,11 +38,13 @@ class ScrollViewP extends Component {
     let {children} = this.props;
     let renderSpinner = this._renderSpinner.bind(this);
     let handleScroll = this._handleScroll.bind(this);
+    let renderErrorMessage = this._renderErrorMessage.bind(this);
 
     return <ScrollView onScroll={handleScroll}>
       {children}
 
       {renderSpinner()}
+      {renderErrorMessage()}
     </ScrollView>
   }
 
@@ -52,10 +58,25 @@ class ScrollViewP extends Component {
     }
   }
 
-  _handleScroll ({nativeEvent}) {
-    let {fetching, fireDistance} = this.props;
+  _renderErrorMessage () {
+    let {errorMessage} = this.props;
+    let handlePressRetryButton = this._handlePressRetryButton.bind(this);
 
-    if (this.state.loadMoreEnabled && fetching == false) {
+    if (errorMessage) {
+      return <View style={styles.errorCointainer}>
+        <Text>{errorMessage}</Text>
+        <MKButton style={styles.retryButton} onPress={handlePressRetryButton}>
+          <Text style={styles.retryButtonText}>REINTENTAR</Text>
+        </MKButton>
+      </View>
+    }
+  }
+
+  _handleScroll ({nativeEvent}) {
+    let {fetching, fireDistance, errorMessage} = this.props;
+    let {loadMoreEnabled} = this.state;
+
+    if (loadMoreEnabled && fetching == false && _.isEmpty(errorMessage)) {
       let posY = nativeEvent.contentOffset.y + nativeEvent.layoutMeasurement.height;
       let height = nativeEvent.contentSize.height;
 
@@ -64,6 +85,12 @@ class ScrollViewP extends Component {
           return this.props.onLoadMore();
         }
       }
+    }
+  }
+
+  _handlePressRetryButton () {
+    if (this.props.onPressRetryButton) {
+      return this.props.onPressRetryButton();
     }
   }
 }
@@ -77,6 +104,24 @@ const styles = StyleSheet.create({
   spinner: {
     width: 30,
     height: 30
+  },
+
+  errorCointainer: {
+    padding: 12,
+    alignItems: 'center'
+  },
+
+  retryButton: {
+    height: 36,
+    marginTop: 8,
+    paddingRight: 8,
+    paddingLeft: 8,
+    justifyContent: 'center'
+  },
+
+  retryButtonText: {
+    color: MKColor.Blue,
+    fontWeight: 'bold'
   }
 });
 

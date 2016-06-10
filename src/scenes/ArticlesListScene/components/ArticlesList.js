@@ -4,34 +4,49 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  View,
-  Text,
   StyleSheet,
+  ListView
 } from 'react-native';
-import {
-  MKSpinner
-} from 'react-native-material-kit';
 
 /* Components */
 import ArticleCard from './ArticleCard';
-import ScrollView from '../../../components/ScrollView';
 
 class ArticlesList extends Component {
-  render () {
-    let { articles, fetching } = this.props;
-    let handleLoadMore = this._handleLoadMore.bind(this);
+  constructor (props) {
+    super(props);
 
-    return <ScrollView 
-      fetching={fetching}
-      onLoadMore={handleLoadMore} 
-    >
-      {articles.map(article => {
-        return <ArticleCard key={article.id} article={article} />
-      })}
-    </ScrollView>
+    let dataSource = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2
+    });
+
+    this.state = {
+      articlesDS: dataSource
+    }
   }
 
-  _handleLoadMore () {
+  componentWillReceiveProps (newProps) {
+    if (newProps.articles !== this.props.articles) {
+      this.setState({
+        articlesDS: this.state.articlesDS.cloneWithRows(newProps.articles)
+      });
+    }
+  }
+
+  render () {
+    let {articlesDS} = this.state;
+    let handleEndReached = this._handleEndReached.bind(this);
+
+    return <ListView
+      enableEmptySections={true}
+      dataSource={articlesDS}
+      renderRow={(article) => {
+        return <ArticleCard article={article} />
+      }}
+      onEndReached={handleEndReached}
+    />
+  }
+
+  _handleEndReached () {
     if (this.props.onLoadMore) {
       return this.props.onLoadMore();
     }
@@ -44,7 +59,8 @@ const styles = StyleSheet.create({
 });
 
 ArticlesList.propTypes = {
-  articles: PropTypes.array.isRequired
+  articles: PropTypes.array.isRequired,
+  onLoadMore: PropTypes.func
 };
 
 export default ArticlesList;

@@ -12,3 +12,9 @@ export const loadArticles = (page_number) => {
     }
   };
 };
+
+export const resetArticlesError = () => {
+  return {
+    type: 'ARTICLES_RESET_ERROR'
+  };
+};
