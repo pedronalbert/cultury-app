@@ -8,6 +8,9 @@ import {
   Text,
   StyleSheet
 } from 'react-native';
+import {
+  MKSpinner
+} from 'react-native-material-kit';
 import { connect } from 'react-redux';
 
 /* Components */
@@ -23,6 +26,7 @@ class ArticlesListScene extends Component {
   render () {
     let {articles, fetching, errorMessage} = this.props;
     let handleOnLoadMore = this._handleOnLoadMore.bind(this);
+    let renderSpinner = this._renderSpinner.bind(this);
 
     return <View style={styles.root}>
       <NavBar/>
@@ -30,6 +34,8 @@ class ArticlesListScene extends Component {
         articles={articles}
         onLoadMore={handleOnLoadMore}
       />
+
+      {renderSpinner()}
     </View>
   }
 
@@ -48,12 +54,33 @@ class ArticlesListScene extends Component {
       this._loadMoreArticles();
     }
   }
+
+  _renderSpinner () {
+    let {fetching} = this.props;
+
+    if (fetching) {
+      return <View style={styles.spinnerContainer}>
+        <MKSpinner style={styles.spinner} />
+      </View>
+    }
+  }
 }
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.1)'
+  },
+
+  spinner: {
+    width: 32,
+    height: 32
+  },
+
+  spinnerContainer: {
+    paddingTop: 12,
+    paddingBottom: 12,
+    alignItems: 'center'
   }
 });
 
