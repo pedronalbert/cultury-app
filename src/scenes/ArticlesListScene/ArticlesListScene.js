@@ -22,13 +22,13 @@ class ArticlesListScene extends Component {
   
   render () {
     let {articles, fetching, errorMessage} = this.props;
-    let handlePressRetryButton = this._handlePressRetryButton.bind(this);
+    let handleOnLoadMore = this._handleOnLoadMore.bind(this);
 
     return <View style={styles.root}>
       <NavBar/>
       <ArticlesList 
         articles={articles}
-        onLoadMore={this._loadMoreArticles.bind(this)}
+        onLoadMore={handleOnLoadMore}
       />
     </View>
   }
@@ -41,9 +41,12 @@ class ArticlesListScene extends Component {
     }
   }
 
-  _handlePressRetryButton () {
-    this.props.dispatch(resetArticlesError());
-    this._loadMoreArticles();
+  _handleOnLoadMore () {
+    let {fetching} = this.props;
+
+    if (fetching == false) {
+      this._loadMoreArticles();
+    }
   }
 }
 
