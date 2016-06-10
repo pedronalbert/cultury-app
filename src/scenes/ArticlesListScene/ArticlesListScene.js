@@ -9,7 +9,9 @@ import {
   StyleSheet
 } from 'react-native';
 import {
-  MKSpinner
+  MKSpinner,
+  MKButton,
+  MKColor
 } from 'react-native-material-kit';
 import { connect } from 'react-redux';
 
@@ -24,18 +26,16 @@ class ArticlesListScene extends Component {
   }
   
   render () {
-    let {articles, fetching, errorMessage} = this.props;
-    let handleOnLoadMore = this._handleOnLoadMore.bind(this);
     let renderSpinner = this._renderSpinner.bind(this);
+    let renderError = this._renderError.bind(this);
+    let renderArticlesList = this._renderArticlesList.bind(this);
+    let handleOnLoadMore = this._handleOnLoadMore.bind(this);
 
     return <View style={styles.root}>
       <NavBar/>
-      <ArticlesList 
-        articles={articles}
-        onLoadMore={handleOnLoadMore}
-      />
-
+      {renderArticlesList()}
       {renderSpinner()}
+      {renderError()}
     </View>
   }
 
@@ -64,6 +64,29 @@ class ArticlesListScene extends Component {
       </View>
     }
   }
+
+  _renderError () {
+    let {errorMessage, fetching} = this.props;
+    let handlePressRetryButton = this._handleOnLoadMore.bind(this);
+
+    if (errorMessage && fetching == false) {
+      return <View style={styles.errorCointainer}>
+        <Text>{errorMessage}</Text>
+        <MKButton style={styles.retryButton} onPress={handlePressRetryButton}>
+          <Text style={styles.retryButtonText}>REINTENTAR</Text>
+        </MKButton>
+      </View>
+    }
+  }
+
+  _renderArticlesList () {
+    let {articles} = this.props;
+    let handleOnLoadMore = this._handleOnLoadMore.bind(this);
+
+    if (articles.length > 0) {
+      return <ArticlesList articles={articles} onLoadMore={handleOnLoadMore} />
+    }
+  }
 }
 
 const styles = StyleSheet.create({
@@ -81,6 +104,24 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: 12,
     alignItems: 'center'
+  },
+
+  errorCointainer: {
+    padding: 12,
+    alignItems: 'center'
+  },
+
+  retryButton: {
+    height: 36,
+    marginTop: 8,
+    paddingRight: 8,
+    paddingLeft: 8,
+    justifyContent: 'center'
+  },
+
+  retryButtonText: {
+    color: MKColor.Blue,
+    fontWeight: 'bold'
   }
 });
 

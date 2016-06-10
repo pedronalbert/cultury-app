@@ -20,7 +20,7 @@ class ArticlesList extends Component {
     });
 
     this.state = {
-      articlesDS: dataSource
+      articlesDS: dataSource.cloneWithRows(props.articles)
     }
   }
 
