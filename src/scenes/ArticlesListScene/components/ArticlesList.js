@@ -17,11 +17,13 @@ class ArticlesList extends Component {
   render () {
     let { articles, fetching, errorMessage } = this.props;
     let handleEndReached = this._handleEndReached.bind(this);
+    let handleOnPressRetryButton = this._handleOnPressRetryButton.bind(this);
 
     return <ScrollView
       fetching={fetching}
       errorMessage={errorMessage}
       onEndReached={handleEndReached}
+      onPressRetryButton={handleOnPressRetryButton}
     >
       {articles.map(article => {
         return <ArticleCard key={article.id} article={article} />
@@ -34,6 +36,12 @@ class ArticlesList extends Component {
       return this.props.onLoadMore();
     }
   }
+
+  _handleOnPressRetryButton () {
+    if (this.props.onPressRetryButton) {
+      return this.props.onPressRetryButton();
+    }
+  }
 }
 
 const styles = StyleSheet.create({
@@ -43,7 +51,8 @@ const styles = StyleSheet.create({
 
 ArticlesList.propTypes = {
   articles: PropTypes.array.isRequired,
-  onLoadMore: PropTypes.func
+  onLoadMore: PropTypes.func,
+  onPressRetryButton: PropTypes.func
 };
 
 export default ArticlesList;

@@ -96,9 +96,13 @@ class ScrollViewP extends Component {
   }
 
   _handleContenSizeChange () {
-    this.setState({
-      endReached: false
-    });
+    let { errorMessage, fetching } = this.props;
+
+    if (_.isEmpty(errorMessage) && fetching == false) {
+      this.setState({
+        endReached: false
+      });
+    }
   }
 }
 
