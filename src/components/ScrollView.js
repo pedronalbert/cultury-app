@@ -22,29 +22,26 @@ class ScrollViewP extends Component {
     super(props);
 
     this.state = {
-      loadMoreEnabled: true
-    }
-  }
+      endReached: false
+    };
 
-  componentWillReceiveProps (newProps) {
-    if (newProps.fetching && newProps.fetching == false) {
-      setTimeout(() => {
-        this.setState({loadMoreEnabled: true});
-      }, 1000)
-    }
   }
 
   render () {
     let {children} = this.props;
     let renderSpinner = this._renderSpinner.bind(this);
     let handleScroll = this._handleScroll.bind(this);
-    let renderErrorMessage = this._renderErrorMessage.bind(this);
+    let handleContenSizeChange = this._handleContenSizeChange.bind(this);
+    let renderError = this._renderError.bind(this);
 
-    return <ScrollView onScroll={handleScroll}>
+    return <ScrollView
+      onScroll={handleScroll}
+      onContentSizeChange={handleContenSizeChange}
+    >
       {children}
 
       {renderSpinner()}
-      {renderErrorMessage()}
+      {renderError()}
     </ScrollView>
   }
 
@@ -58,7 +55,7 @@ class ScrollViewP extends Component {
     }
   }
 
-  _renderErrorMessage () {
+  _renderError () {
     let {errorMessage} = this.props;
     let handlePressRetryButton = this._handlePressRetryButton.bind(this);
 
@@ -73,16 +70,20 @@ class ScrollViewP extends Component {
   }
 
   _handleScroll ({nativeEvent}) {
-    let {fetching, fireDistance, errorMessage} = this.props;
-    let {loadMoreEnabled} = this.state;
+    let { endReached } = this.state;
+    let { endReachedDistance } = this.props;
 
-    if (loadMoreEnabled && fetching == false && _.isEmpty(errorMessage)) {
+    if ( endReached == false ) {
       let posY = nativeEvent.contentOffset.y + nativeEvent.layoutMeasurement.height;
       let height = nativeEvent.contentSize.height;
 
-      if ((height - posY) <= fireDistance) {
-        if (this.props.onLoadMore) {
-          return this.props.onLoadMore();
+      if ((height - posY) <= endReachedDistance) {
+        this.setState({
+          endReached: true
+        });
+
+        if (this.props.onEndReached) {
+          return this.props.onEndReached();
         }
       }
     }
@@ -92,6 +93,12 @@ class ScrollViewP extends Component {
     if (this.props.onPressRetryButton) {
       return this.props.onPressRetryButton();
     }
+  }
+
+  _handleContenSizeChange () {
+    this.setState({
+      endReached: false
+    });
   }
 }
 
@@ -127,7 +134,15 @@ const styles = StyleSheet.create({
 
 ScrollViewP.defaultProps = {
   fetching: false,
-  fireDistance: 100
-}
+  endReachedDistance: 1000
+};
+
+ScrollViewP.propTypes = {
+  fetching: PropTypes.bool,
+  onPressRetryButton: PropTypes.func,
+  onEndReached: PropTypes.func,
+  endReachedDistance: PropTypes.number,
+  errorMessage: PropTypes.string
+};
 
 export default ScrollViewP;

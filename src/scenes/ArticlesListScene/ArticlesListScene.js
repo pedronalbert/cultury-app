@@ -26,16 +26,17 @@ class ArticlesListScene extends Component {
   }
   
   render () {
-    let renderSpinner = this._renderSpinner.bind(this);
-    let renderError = this._renderError.bind(this);
-    let renderArticlesList = this._renderArticlesList.bind(this);
+    let { articles, fetching, errorMessage } = this.props;
     let handleOnLoadMore = this._handleOnLoadMore.bind(this);
 
     return <View style={styles.root}>
       <NavBar/>
-      {renderArticlesList()}
-      {renderSpinner()}
-      {renderError()}
+      <ArticlesList 
+        articles={articles}
+        fetching={fetching}
+        errorMessage={errorMessage}
+        onLoadMore={handleOnLoadMore} 
+      />
     </View>
   }
 
@@ -52,39 +53,6 @@ class ArticlesListScene extends Component {
 
     if (fetching == false) {
       this._loadMoreArticles();
-    }
-  }
-
-  _renderSpinner () {
-    let {fetching} = this.props;
-
-    if (fetching) {
-      return <View style={styles.spinnerContainer}>
-        <MKSpinner style={styles.spinner} />
-      </View>
-    }
-  }
-
-  _renderError () {
-    let {errorMessage, fetching} = this.props;
-    let handlePressRetryButton = this._handleOnLoadMore.bind(this);
-
-    if (errorMessage && fetching == false) {
-      return <View style={styles.errorCointainer}>
-        <Text>{errorMessage}</Text>
-        <MKButton style={styles.retryButton} onPress={handlePressRetryButton}>
-          <Text style={styles.retryButtonText}>REINTENTAR</Text>
-        </MKButton>
-      </View>
-    }
-  }
-
-  _renderArticlesList () {
-    let {articles} = this.props;
-    let handleOnLoadMore = this._handleOnLoadMore.bind(this);
-
-    if (articles.length > 0) {
-      return <ArticlesList articles={articles} onLoadMore={handleOnLoadMore} />
     }
   }
 }

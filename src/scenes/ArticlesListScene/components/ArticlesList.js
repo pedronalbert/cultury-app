@@ -10,40 +10,23 @@ import {
 
 /* Components */
 import ArticleCard from './ArticleCard';
+import ScrollView from '../../../components/ScrollView';
 
 class ArticlesList extends Component {
-  constructor (props) {
-    super(props);
-
-    let dataSource = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2
-    });
-
-    this.state = {
-      articlesDS: dataSource.cloneWithRows(props.articles)
-    }
-  }
-
-  componentWillReceiveProps (newProps) {
-    if (newProps.articles !== this.props.articles) {
-      this.setState({
-        articlesDS: this.state.articlesDS.cloneWithRows(newProps.articles)
-      });
-    }
-  }
 
   render () {
-    let {articlesDS} = this.state;
+    let { articles, fetching, errorMessage } = this.props;
     let handleEndReached = this._handleEndReached.bind(this);
 
-    return <ListView
-      enableEmptySections={true}
-      dataSource={articlesDS}
-      renderRow={(article) => {
-        return <ArticleCard article={article} />
-      }}
+    return <ScrollView
+      fetching={fetching}
+      errorMessage={errorMessage}
       onEndReached={handleEndReached}
-    />
+    >
+      {articles.map(article => {
+        return <ArticleCard key={article.id} article={article} />
+      })}
+    </ScrollView>
   }
 
   _handleEndReached () {
