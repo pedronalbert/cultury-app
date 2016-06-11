@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import NavBar from './components/NavBar';
 import ArticlesList from './components/ArticlesList';
 import { loadArticles, resetArticlesError } from '../../redux/actions/ArticlesActions';
+import IconButton from '../../components/IconButton';
 
 class ArticlesListScene extends Component {
   componentWillMount() {
@@ -31,7 +32,14 @@ class ArticlesListScene extends Component {
     let handleOnPressRetryButton = this._handleOnPressRetryButton.bind(this);
 
     return <View style={styles.root}>
-      <NavBar/>
+      <NavBar
+        title='Artículos'
+        searchable={true}
+        leftIcon={<IconButton iconName='menu' />}
+        onChangeSearchText={text => {
+          console.log(text);
+        }}
+      />
       <ArticlesList 
         articles={articles}
         fetching={fetching}

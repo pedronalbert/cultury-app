@@ -1,6 +1,7 @@
 /* Dependencies */
 import React, {
-  Component
+  Component,
+  PropTypes
 } from 'react';
 import {
   View,
@@ -41,9 +42,12 @@ const styles = StyleSheet.create({
 });
 
 IconButton.defaultProps = {
-  iconName: 'menu',
   iconColor: 'white',
   underlayColor: 'rgba(255,255,255,0.25)'
+};
+
+IconButton.propTypes = {
+  iconName: PropTypes.string.isRequired
 };
 
 export default IconButton;
