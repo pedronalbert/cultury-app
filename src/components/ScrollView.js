@@ -141,6 +141,7 @@ ScrollViewP.defaultProps = {
 
 ScrollViewP.propTypes = {
   fetching: PropTypes.bool,
+  endReachedDistance: PropTypes.number,
   onPressRetryButton: PropTypes.func,
   onEndReached: PropTypes.func,
   endReachedDistance: PropTypes.number,

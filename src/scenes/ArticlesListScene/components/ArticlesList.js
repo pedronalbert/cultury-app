@@ -45,9 +45,11 @@ class ArticlesList extends Component {
 }
 
 ArticlesList.propTypes = {
-  articles: PropTypes.array.isRequired,
-  onLoadMore: PropTypes.func,
-  onPressRetryButton: PropTypes.func
+  articles: PropTypes.arrayOf(PropTypes.object).isRequired,
+  fetching: PropTypes.bool.isRequired,
+  errorMessage: PropTypes.string.isRequired,
+  onLoadMore: PropTypes.func.isRequired,
+  onPressRetryButton: PropTypes.func.isRequired
 };
 
 export default ArticlesList;

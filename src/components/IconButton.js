@@ -47,11 +47,14 @@ const styles = StyleSheet.create({
 
 IconButton.defaultProps = {
   iconColor: 'white',
-  underlayColor: 'rgba(255,255,255,0.25)'
+  underlayColor: 'rgba(255,255,255,0.30)'
 };
 
 IconButton.propTypes = {
-  iconName: PropTypes.string.isRequired
+  iconName: PropTypes.string.isRequired,
+  iconColor: PropTypes.string,
+  underlayColor: PropTypes.string,
+  style: PropTypes.object
 };
 
 export default IconButton;

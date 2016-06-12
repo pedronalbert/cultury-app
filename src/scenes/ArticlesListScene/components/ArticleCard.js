@@ -16,18 +16,19 @@ import _ from 'lodash';
 class ArticleCard extends Component {
   constructor (props) {
     super(props);
+
+    this._handleLayout = this._handleLayout.bind(this);
+
     this.state = {
       imageHeight: 100
     }
   }
 
   render () {
-    let {article} = this.props;
-    let {title, imageUrl, content} = article.attributes;
-    let handleLayout = this._handleLayout.bind(this);
+    let {title, imageUrl, content} = this.props.article.attributes;
 
     return <View style={styles.root}>
-      <View ref='header' style={styles.header} onLayout={handleLayout}>
+      <View ref='header' style={styles.header} onLayout={this._handleLayout}>
         <Image source={{uri: imageUrl}} style={{height: this.state.imageHeight}}/>
 
         <View style={styles.titleRow}>
@@ -83,7 +84,13 @@ const styles = StyleSheet.create({
 
 
 ArticleCard.propTypes = {
-  article: PropTypes.object.isRequired
+  article: PropTypes.shape({
+    attributes: {
+      title: PropTypes.string.isRequired,
+      imageUrl: PropTypes.string.isRequired,
+      content: PropTypes.string.isRequired
+    }
+  }).isRequired
 }
 
 export default ArticleCard;
