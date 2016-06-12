@@ -63,6 +63,7 @@ class NavBar extends Component {
 
   _renderSearchInput () {
     let handleChangeText = this._handleChangeSearchText.bind(this);
+    let handleSubmitEditing = this._handleSubmitSearch.bind(this);
 
     if (this.props.searchable && this.state.searchOpen) {
       return <TextInput
@@ -70,6 +71,7 @@ class NavBar extends Component {
         style={styles.searchInput}
         value={this.state.searchText}
         onChangeText={handleChangeText}
+        onSubmitEditing={handleSubmitEditing}
       />
     }
   }
@@ -87,6 +89,12 @@ class NavBar extends Component {
 
     if (this.props.onChangeSearchText) {
       return this.props.onChangeSearchText(newText);
+    }
+  }
+
+  _handleSubmitSearch () {
+    if (this.props.onSubmitSearch) {
+      return this.props.onSubmitSearch(this.state.searchText);
     }
   }
 
@@ -152,7 +160,8 @@ NavBar.propTypes = {
   searchable: PropTypes.bool,
   onOpenSearch: PropTypes.func,
   onCloseSearch: PropTypes.func,
-  onChangeSearchText: PropTypes.func
+  onChangeSearchText: PropTypes.func,
+  onSubmitSearch: PropTypes.func
 };
 
 export default NavBar;

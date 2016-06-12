@@ -3,9 +3,10 @@ import Immutable from 'immutable';
 
 const initialState = Immutable.fromJS({
   ids: [],
+  searchText: '',
   meta: {
     page_number: 0,
-    page_count: 1
+    page_count: 0
   },
   errorMessage: '',
   fetching: false
@@ -41,6 +42,17 @@ export default function articles (state = initialState, action) {
 
   if (action.type == 'ARTICLES_RESET_ERROR') {
     return state.set('errorMessage', '');
+  }
+
+  if (action.type == 'ARTICLES_RESET_LIST') {
+    return state.withMutations(state => {
+      state.set('ids', Immutable.List([]));
+      state.setIn(['meta', 'page_count'], 0);
+    });
+  }
+
+  if (action.type == 'ARTICLES_SET_SEARCH_TEXT') {
+    return state.set('searchText', action.payload.searchText);
   }
 
   return state;

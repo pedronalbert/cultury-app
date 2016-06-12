@@ -18,27 +18,28 @@ import { connect } from 'react-redux';
 /* Components */
 import NavBar from './components/NavBar';
 import ArticlesList from './components/ArticlesList';
-import { loadArticles, resetArticlesError } from '../../redux/actions/ArticlesActions';
+import ArticlesActions from '../../redux/actions/ArticlesActions';
 import IconButton from '../../components/IconButton';
 
 class ArticlesListScene extends Component {
   componentWillMount() {
-    return this._loadMoreArticles();
+    return this.props.dispatch(ArticlesActions.fetch({page_number: 1}));
   }
   
   render () {
     let { articles, fetching, errorMessage } = this.props;
     let handleOnLoadMore = this._handleOnLoadMore.bind(this);
     let handleOnPressRetryButton = this._handleOnPressRetryButton.bind(this);
+    let handleSubmitSearch = this._handleSubmitSearch.bind(this);
+    let handleCloseSearch = this._handleCloseSearch.bind(this);
 
     return <View style={styles.root}>
       <NavBar
         title='Artículos'
         searchable={true}
         leftIcon={<IconButton iconName='menu' />}
-        onChangeSearchText={text => {
-          console.log(text);
-        }}
+        onSubmitSearch={handleSubmitSearch}
+        onCloseSearch={handleCloseSearch}
       />
       <ArticlesList 
         articles={articles}
@@ -54,7 +55,7 @@ class ArticlesListScene extends Component {
     let {page_number, page_count} = this.props.articles_meta;
 
     if (page_count > page_number) {
-      this.props.dispatch(loadArticles(page_number+1))
+      this.props.dispatch(ArticlesActions.fetch({page_number: page_number + 1 }));
     }
   }
 
@@ -67,8 +68,22 @@ class ArticlesListScene extends Component {
   }
 
   _handleOnPressRetryButton () {
-    this.props.dispatch(resetArticlesError());
+    this.props.dispatch(ArticlesActions.resetError());
     this._loadMoreArticles();
+  }
+
+  _handleSubmitSearch (searchText) {
+    this.props.dispatch(ArticlesActions.setSearchText(searchText));
+    this.props.dispatch(ArticlesActions.resetList());
+    this.props.dispatch(ArticlesActions.fetch({page_number: 1}));
+  }
+
+  _handleCloseSearch () {
+    if (this.props.searchText) {
+      this.props.dispatch(ArticlesActions.setSearchText(''));
+      this.props.dispatch(ArticlesActions.resetList());
+      this.props.dispatch(ArticlesActions.fetch({page_number: 1}));
+    }
   }
 }
 
@@ -124,7 +139,8 @@ const mapStateToProps = (state) => {
     articles: articles,
     articles_meta: state.articles.get('meta').toJS(),
     fetching: state.articles.get('fetching'),
-    errorMessage: state.articles.get('errorMessage')
+    errorMessage: state.articles.get('errorMessage'),
+    searchText: state.articles.get('searchText')
   };
 };
 
