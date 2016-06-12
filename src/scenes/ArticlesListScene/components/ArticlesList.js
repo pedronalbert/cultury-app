@@ -3,27 +3,27 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import {
-  StyleSheet,
-  ListView
-} from 'react-native';
 
 /* Components */
 import ArticleCard from './ArticleCard';
 import ScrollView from '../../../components/ScrollView';
 
 class ArticlesList extends Component {
+  constructor (props) {
+    super(props);
+    
+    this._handleEndReached = this._handleEndReached.bind(this);
+    this._handleOnPressRetryButton = this._handleOnPressRetryButton.bind(this);
+  }
 
   render () {
     let { articles, fetching, errorMessage } = this.props;
-    let handleEndReached = this._handleEndReached.bind(this);
-    let handleOnPressRetryButton = this._handleOnPressRetryButton.bind(this);
 
     return <ScrollView
       fetching={fetching}
       errorMessage={errorMessage}
-      onEndReached={handleEndReached}
-      onPressRetryButton={handleOnPressRetryButton}
+      onEndReached={this._handleEndReached}
+      onPressRetryButton={this._handleOnPressRetryButton}
     >
       {articles.map(article => {
         return <ArticleCard key={article.id} article={article} />
@@ -43,11 +43,6 @@ class ArticlesList extends Component {
     }
   }
 }
-
-const styles = StyleSheet.create({
-  root: {
-  }
-});
 
 ArticlesList.propTypes = {
   articles: PropTypes.array.isRequired,

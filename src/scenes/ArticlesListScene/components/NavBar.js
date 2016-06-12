@@ -17,6 +17,12 @@ class NavBar extends Component {
   constructor (props) {
     super(props);
 
+    this._renderTitle = this._renderTitle.bind(this);
+    this._renderSearchInput = this._renderSearchInput.bind(this);
+    this._renderSearchButton = this._renderSearchButton.bind(this);
+    this._renderCloseSearchButton = this._renderCloseSearchButton.bind(this);
+    this._renderLeftIcon = this._renderLeftIcon.bind(this);
+
     this.state = {
       searchOpen: false,
       searchText: ''
@@ -24,18 +30,12 @@ class NavBar extends Component {
   }
 
   render () {
-    let renderTitle = this._renderTitle.bind(this);
-    let renderSearchInput = this._renderSearchInput.bind(this);
-    let renderSearchButton = this._renderSearchButton.bind(this);
-    let renderCloseSearchButton = this._renderCloseSearchButton.bind(this);
-    let renderLeftIcon = this._renderLeftIcon.bind(this);
-
     return <View style={styles.root}>
-      {renderLeftIcon()}
-      {renderTitle()}
-      {renderSearchInput()}
-      {renderSearchButton()}
-      {renderCloseSearchButton()}
+      {this._renderLeftIcon()}
+      {this._renderTitle()}
+      {this._renderSearchInput()}
+      {this._renderSearchButton()}
+      {this._renderCloseSearchButton()}
     </View>
   }
 

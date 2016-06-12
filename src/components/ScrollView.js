@@ -21,27 +21,25 @@ class ScrollViewP extends Component {
   constructor (props) {
     super(props);
 
+    this._handleContenSizeChange = this._handleContenSizeChange.bind(this);
+    this._handleScroll = this._handleScroll.bind(this);
+    this._renderSpinner = this._renderSpinner.bind(this);
+    this._renderError = this._renderError.bind(this);
+
     this.state = {
       endReached: false
     };
-
   }
 
   render () {
-    let {children} = this.props;
-    let renderSpinner = this._renderSpinner.bind(this);
-    let handleScroll = this._handleScroll.bind(this);
-    let handleContenSizeChange = this._handleContenSizeChange.bind(this);
-    let renderError = this._renderError.bind(this);
-
     return <ScrollView
-      onScroll={handleScroll}
-      onContentSizeChange={handleContenSizeChange}
+      onScroll={this._handleScroll}
+      onContentSizeChange={this._handleContenSizeChange}
     >
-      {children}
+      {this.props.children}
 
-      {renderSpinner()}
-      {renderError()}
+      {this._renderSpinner()}
+      {this._renderError()}
     </ScrollView>
   }
 

@@ -14,11 +14,15 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 /* Components */
 
 class IconButton extends Component {
+  constructor (props) {
+    super(props);
+
+    this._handlePress = this._handlePress.bind(this);
+  }
   render () {
     let { iconName, iconColor, underlayColor, style } = this.props;
-    let handlePress = this._handlePress.bind(this);
 
-    return <TouchableHighlight style={[styles.root, style]} onPress={handlePress} underlayColor={underlayColor}>
+    return <TouchableHighlight style={[styles.root, style]} onPress={this._handlePress} underlayColor={underlayColor}>
       <View>
         <Icon name={iconName} size={26} color={iconColor} />
       </View>

@@ -5,14 +5,8 @@ import React, {
 
 import {
   View,
-  Text,
   StyleSheet
 } from 'react-native';
-import {
-  MKSpinner,
-  MKButton,
-  MKColor
-} from 'react-native-material-kit';
 import { connect } from 'react-redux';
 
 /* Components */
@@ -22,6 +16,15 @@ import ArticlesActions from '../../redux/actions/ArticlesActions';
 import IconButton from '../../components/IconButton';
 
 class ArticlesListScene extends Component {
+  constructor (props) {
+    super(props);
+    
+    this._loadMoreArticles = this._loadMoreArticles.bind(this);
+    this._handleSubmitSearch = this._handleSubmitSearch.bind(this);
+    this._handleCloseSearch = this._handleCloseSearch.bind(this);
+    this._handlePressRetryButton = this._handlePressRetryButton.bind(this);
+  }
+
   componentWillMount() {
     this._loadMoreArticles();
   }
@@ -34,15 +37,15 @@ class ArticlesListScene extends Component {
         title='Artículos'
         searchable={true}
         leftIcon={<IconButton iconName='menu' />}
-        onSubmitSearch={this._handleSubmitSearch.bind(this)}
-        onCloseSearch={this._handleCloseSearch.bind(this)}
+        onSubmitSearch={this._handleSubmitSearch}
+        onCloseSearch={this._handleCloseSearch}
       />
       <ArticlesList 
         articles={articles}
         fetching={fetching}
         errorMessage={errorMessage}
-        onLoadMore={this._loadMoreArticles.bind(this)}
-        onPressRetryButton={this._handlePressRetryButton.bind(this)}
+        onLoadMore={this._loadMoreArticles}
+        onPressRetryButton={this._handlePressRetryButton}
       />
     </View>
   }
@@ -75,35 +78,6 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.1)'
-  },
-
-  spinner: {
-    width: 32,
-    height: 32
-  },
-
-  spinnerContainer: {
-    paddingTop: 12,
-    paddingBottom: 12,
-    alignItems: 'center'
-  },
-
-  errorCointainer: {
-    padding: 12,
-    alignItems: 'center'
-  },
-
-  retryButton: {
-    height: 36,
-    marginTop: 8,
-    paddingRight: 8,
-    paddingLeft: 8,
-    justifyContent: 'center'
-  },
-
-  retryButtonText: {
-    color: MKColor.Blue,
-    fontWeight: 'bold'
   }
 });
 
