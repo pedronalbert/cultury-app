@@ -11,9 +11,6 @@ import ScrollView from '../../../components/ScrollView';
 class ArticlesList extends Component {
   constructor (props) {
     super(props);
-    
-    this._handleEndReached = this._handleEndReached.bind(this);
-    this._handleOnPressRetryButton = this._handleOnPressRetryButton.bind(this);
   }
 
   render () {
@@ -22,25 +19,13 @@ class ArticlesList extends Component {
     return <ScrollView
       fetching={fetching}
       errorMessage={errorMessage}
-      onEndReached={this._handleEndReached}
-      onPressRetryButton={this._handleOnPressRetryButton}
+      onEndReached={this.props.onLoadMore}
+      onPressRetryButton={this.props.onPressRetryButton}
     >
       {articles.map(article => {
         return <ArticleCard key={article.id} article={article} />
       })}
     </ScrollView>
-  }
-
-  _handleEndReached () {
-    if (this.props.onLoadMore) {
-      return this.props.onLoadMore();
-    }
-  }
-
-  _handleOnPressRetryButton () {
-    if (this.props.onPressRetryButton) {
-      return this.props.onPressRetryButton();
-    }
   }
 }
 
