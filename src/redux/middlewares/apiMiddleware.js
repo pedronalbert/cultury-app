@@ -6,7 +6,8 @@ export const CALL_API = 'CALL_API'
 
 let client = axios.create({
   baseURL: 'http://192.168.0.2:1337',
-  responseType: 'json'
+  responseType: 'json',
+  timeout: 10000
 });
 
 let middleware = store => next => action => {

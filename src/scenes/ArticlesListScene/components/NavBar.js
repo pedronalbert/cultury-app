@@ -148,7 +148,8 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 48,
     color: 'white',
-    fontSize: 14
+    fontSize: 14,
+    marginLeft: 8
   }
 });
 

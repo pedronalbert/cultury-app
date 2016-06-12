@@ -3,6 +3,11 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet
+} from 'react-native';
 
 /* Components */
 import ArticleCard from './ArticleCard';
@@ -16,19 +21,31 @@ class ArticlesList extends Component {
   render () {
     let { articles, fetching, errorMessage } = this.props;
 
-    return <ScrollView
-      fetching={fetching}
-      errorMessage={errorMessage}
-      onEndReached={this.props.onLoadMore}
-      onPressRetryButton={this.props.onPressRetryButton}
-    >
-      {articles.map(article => {
-        return <ArticleCard key={article.id} article={article} />
-      })}
-    </ScrollView>
+    if (articles.length > 0 || fetching || errorMessage) {
+      return <ScrollView
+        fetching={fetching}
+        errorMessage={errorMessage}
+        onEndReached={this.props.onLoadMore}
+        onPressRetryButton={this.props.onPressRetryButton}
+      >
+        {articles.map(article => {
+          return <ArticleCard key={article.id} article={article} />
+        })}
+      </ScrollView>
+    } else {
+      return <View style={styles.notFoundContainer}>
+        <Text>No se han encontrado artículos</Text>
+      </View>
+    }
   }
 }
 
+const styles = StyleSheet.create({
+  notFoundContainer: {
+    padding: 16,
+    alignItems: 'center'
+  }
+});
 ArticlesList.propTypes = {
   articles: PropTypes.arrayOf(PropTypes.object).isRequired,
   fetching: PropTypes.bool.isRequired,
