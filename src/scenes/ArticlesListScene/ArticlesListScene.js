@@ -23,67 +23,51 @@ import IconButton from '../../components/IconButton';
 
 class ArticlesListScene extends Component {
   componentWillMount() {
-    return this.props.dispatch(ArticlesActions.fetch({page_number: 1}));
+    this._loadMoreArticles();
   }
   
   render () {
     let { articles, fetching, errorMessage } = this.props;
-    let handleOnLoadMore = this._handleOnLoadMore.bind(this);
-    let handleOnPressRetryButton = this._handleOnPressRetryButton.bind(this);
-    let handleSubmitSearch = this._handleSubmitSearch.bind(this);
-    let handleCloseSearch = this._handleCloseSearch.bind(this);
 
     return <View style={styles.root}>
       <NavBar
         title='Artículos'
         searchable={true}
         leftIcon={<IconButton iconName='menu' />}
-        onSubmitSearch={handleSubmitSearch}
-        onCloseSearch={handleCloseSearch}
+        onSubmitSearch={this._handleSubmitSearch.bind(this)}
+        onCloseSearch={this._handleCloseSearch.bind(this)}
       />
       <ArticlesList 
         articles={articles}
         fetching={fetching}
         errorMessage={errorMessage}
-        onLoadMore={handleOnLoadMore}
-        onPressRetryButton={handleOnPressRetryButton}
+        onLoadMore={this._loadMoreArticles.bind(this)}
+        onPressRetryButton={this._handlePressRetryButton.bind(this)}
       />
     </View>
   }
 
   _loadMoreArticles () {
-    let {page_number, page_count} = this.props.articles_meta;
+    if (this.props.fetching == false) {
+      let {page_number, page_count} = this.props.articles_meta;
 
-    if (page_count > page_number) {
-      this.props.dispatch(ArticlesActions.fetch({page_number: page_number + 1 }));
+      if (page_count > page_number) {
+        this.props.articlesActions.fetch({page_number: page_number + 1});
+      }
     }
-  }
-
-  _handleOnLoadMore () {
-    let {fetching} = this.props;
-
-    if (fetching == false) {
-      this._loadMoreArticles();
-    }
-  }
-
-  _handleOnPressRetryButton () {
-    this.props.dispatch(ArticlesActions.resetError());
-    this._loadMoreArticles();
   }
 
   _handleSubmitSearch (searchText) {
-    this.props.dispatch(ArticlesActions.setSearchText(searchText));
-    this.props.dispatch(ArticlesActions.resetList());
-    this.props.dispatch(ArticlesActions.fetch({page_number: 1}));
+    this.props.articlesActions.setSearchText(searchText);
   }
 
   _handleCloseSearch () {
-    if (this.props.searchText) {
-      this.props.dispatch(ArticlesActions.setSearchText(''));
-      this.props.dispatch(ArticlesActions.resetList());
-      this.props.dispatch(ArticlesActions.fetch({page_number: 1}));
-    }
+    this.props.articlesActions.setSearchText('');
+  }
+
+  _handlePressRetryButton () {
+    this.props.articlesActions.resetError();
+    this._loadMoreArticles();
   }
 }
 
@@ -144,8 +128,31 @@ const mapStateToProps = (state) => {
   };
 };
 
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    articlesActions: {
+      fetch: (params) => {
+        dispatch(ArticlesActions.fetch(params));
+      },
+
+      resetError: () => {
+        dispatch(ArticlesActions.resetError());
+      },
+
+      setSearchText: (text) => {
+        dispatch(ArticlesActions.setSearchText(text));
+      },
+
+      resetList: () => {
+        dispatch(ArticlesActions.resetList());
+      }
+    }
+  }
+}
+
 ArticlesListScene = connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(ArticlesListScene);
 
 export default ArticlesListScene;

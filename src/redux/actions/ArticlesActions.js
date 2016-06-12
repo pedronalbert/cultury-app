@@ -34,10 +34,22 @@ const resetList = () => {
 };
 
 const setSearchText = (searchText) => {
-  return {
-    type: 'ARTICLES_SET_SEARCH_TEXT',
-    payload: {
-      searchText: searchText
+  return (dispatch, getState) => {
+    let prevSearchText = getState().articles.get('searchText');
+
+    if (searchText !== prevSearchText) {
+      dispatch({
+        type: 'ARTICLES_SET_SEARCH_TEXT',
+        payload: {
+          searchText: searchText
+        }
+      });
+
+      dispatch(resetList());
+
+      return dispatch(fetch({page_count: 1}))
+    } else {
+      return false;
     }
   }
 }

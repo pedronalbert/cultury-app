@@ -113,8 +113,8 @@ const styles = StyleSheet.create({
   },
 
   spinner: {
-    width: 30,
-    height: 30
+    width: 35,
+    height: 35
   },
 
   errorCointainer: {

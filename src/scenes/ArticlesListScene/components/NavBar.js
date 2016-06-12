@@ -72,6 +72,7 @@ class NavBar extends Component {
         value={this.state.searchText}
         onChangeText={handleChangeText}
         onSubmitEditing={handleSubmitEditing}
+        onEndEditing={handleSubmitEditing}
       />
     }
   }

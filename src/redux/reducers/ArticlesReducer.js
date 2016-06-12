@@ -6,7 +6,7 @@ const initialState = Immutable.fromJS({
   searchText: '',
   meta: {
     page_number: 0,
-    page_count: 0
+    page_count: 1
   },
   errorMessage: '',
   fetching: false
@@ -47,7 +47,8 @@ export default function articles (state = initialState, action) {
   if (action.type == 'ARTICLES_RESET_LIST') {
     return state.withMutations(state => {
       state.set('ids', Immutable.List([]));
-      state.setIn(['meta', 'page_count'], 0);
+      state.setIn(['meta', 'page_number'], 0);
+      state.setIn(['meta', 'page_count'], 1);
     });
   }
 
